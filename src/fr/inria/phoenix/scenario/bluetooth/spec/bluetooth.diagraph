@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<DiaGraph>
+	<controller id="SuspiciousAlertController" x="212.0" y="192.0"/>
+	<controller id="RAZController" x="572.0" y="192.0"/>
+	<controller id="CriticalAlertController" x="842.0" y="192.0"/>
+	<context id="AlertSuspectRegulation" x="212.0" y="312.0"/>
+	<source id="DeviceInput/input" x="122.0" y="432.0"/>
+	<source id="MotionDetector/position" x="302.0" y="432.0"/>
+	<context id="WrongAlert" x="572.0" y="312.0"/>
+	<source id="Notifier/notificationResponse" x="482.0" y="432.0"/>
+	<context id="CriticalAlert" x="842.0" y="312.0"/>
+	<source id="Timer/timerValue" x="842.0" y="432.0"/>
+	<source id="DeviceButton/pushed" x="662.0" y="432.0"/>
+	<action id="Timer/TriggerTimer" x="122.0" y="72.0"/>
+	<action id="Notifier/Notify" x="302.0" y="72.0"/>
+	<action id="Timer/ResetTimer" x="482.0" y="72.0"/>
+	<action id="Notifier/SuppressNotification" x="664.0" y="70.0"/>
+	<action id="Notifier/EmergencyCall" x="842.0" y="72.0"/>
+</DiaGraph>

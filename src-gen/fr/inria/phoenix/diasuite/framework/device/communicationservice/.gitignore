@@ -1,0 +1,9 @@
+/AbstractCommunicationService.java
+/IsAliveFromCommunicationService.java
+/LastMessageFromCommunicationService.java
+/LastTrustedMessageFromCommunicationService.java
+/QuestionAnswerFromCommunicationService.java
+/QuestionAnswerIndices.java
+/SafeContactsFromCommunicationService.java
+/TrustedQuestionAnswerFromCommunicationService.java
+/TrustedQuestionAnswerIndices.java

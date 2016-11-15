@@ -1,0 +1,497 @@
+enumeration OnOffStatus {
+	ON, OFF
+}
+
+enumeration TemperatureUnit {
+	CELSIUS, FAHRENHEIT, KELVIN
+}
+
+structure Contact {
+	name as String;
+	emailAddress as String;
+	phone as String;
+	mobile as String;
+	iconUrl as String;
+	groups as String[];
+}
+
+structure Message {
+	sender as Contact;
+	title as String;
+	text as String;
+	attachments as File[];
+}
+
+structure Date {
+	day as Integer;
+	month as Integer;
+	year as Integer;
+	hour as Integer;
+	minute as Integer;
+	second as Integer;
+}
+
+structure AgendaEvent {
+	title as String;
+	description as String;
+	startTime as Date;
+	endTime as Date;
+	place as String;
+	calendar as String;
+}
+
+structure Temperature {
+	value as Float;
+	unit as TemperatureUnit;
+}
+
+enumeration FileType {
+	DIRECTORY, IMAGE, SOUND, RAW_AUDIO, VIDEO, TEXT, OTHER
+}
+
+enumeration TaskState {TO_DO, COMPLETED}
+
+enumeration DailyActivityEnum {MEALS, DRESSING, BATH, WAKEUP, SLEEP}
+
+structure DailyActivity{
+	activity as DailyActivityEnum;
+	done as Boolean;
+}
+
+structure FileInfo {
+	name as String;
+	type as FileType;
+	size as Integer;
+}
+
+structure File {
+	info as FileInfo;
+	content as Binary;
+}
+
+structure Task {
+	id as String;
+	content as String;
+	state as TaskState;
+}
+
+action On {
+	on();
+}
+
+action Off {
+	off();
+}
+
+action VariationControl {
+	setValue(value as Float);
+	increase();
+	decrease();
+}
+
+action SetTemperature {
+	setTemperature(value as Float, unit as TemperatureUnit);
+}
+
+action AgendaEventAction {
+	addEvent(event as AgendaEvent);
+	replaceEvent(oldEvent as AgendaEvent, newEvent as AgendaEvent);
+	removeEvent(event as AgendaEvent);
+}
+
+action AddressBookAction {
+	addContact(contact as Contact);
+	replaceContact(oldContact as Contact, newContact as Contact);
+	removeContact(contact as Contact);
+}
+
+action UnLock {
+	unlock();
+}
+
+action Lock {
+	lock();
+}
+
+action Open {
+	open();
+}
+
+action Close {
+	close();
+}
+
+action SetShutterPosition {
+	setPosition(position as Float);
+}
+
+action PhotoFrameManagement {
+	setCurrentPhoto(photo as File);
+	addPhoto(photo as File);
+	removePhoto(photo as File);
+	removeAllPhoto();
+}
+
+action Update {
+	update(newActivity as DailyActivity);
+}
+
+device Device {
+	attribute id as String;
+	source isAlive as Boolean;
+	//source eventTime as String;
+}
+
+
+//-------------------------
+//-- SERVICES
+//-------------------------
+device Service extends Device {
+}
+
+device HomeService extends Service {
+}
+
+device UserService extends Service {
+	attribute user as String;
+}
+
+device BuiltIn extends Service {
+}
+
+// BUILTIN SERVICES
+device Clock extends BuiltIn {
+	source tickSecond as Integer;
+	source tickMinute as Integer;
+	source tickHour as Integer;
+}
+
+action ScheduleTimer {
+	schedule(id as String, delayMs as Integer);
+	periodicSchedule(id as String, delayMs as Integer, periodMs as Integer);
+	cancel(id as String);
+}
+
+device Timer extends BuiltIn {
+	source timerTriggered as String indexed by timerId as String;
+	action ScheduleTimer;
+}
+
+// USER SERVICES
+
+action SendMessage {
+	sendMessage(to as Contact, title as String, content as String, attachments as File[]);
+	sendMessageWithImage(to as Contact, title as String, content as String, image as String);
+}
+
+action SendTrustedMessage {
+	sendTrustedMessage(to as Contact, title as String, content as String );
+	sendTrustedMessageWithImage(to as Contact, title as String, content as String, image as String);
+}
+
+action AskQuestion {
+	askCloseQuestion(to as Contact, questionId as String, title as String, content as String, possibleAnswers as String[]);
+	askCloseQuestionWithImage(to as Contact, questionId as String, title as String, content as String, possibleAnswers as String[], image as String);
+	askOpenQuestion(to as Contact, questionId as String, title as String, content as String);
+	askOpenQuestionWithImage(to as Contact, questionId as String, title as String, content as String, image as String);
+}
+
+action AskTrustedQuestion {
+	askCloseTrustedQuestion(to as Contact, questionId as String, title as String, content as String, possibleAnswers as String[]);
+	askCloseTrustedQuestionWithImage(to as Contact, questionId as String, title as String, content as String, possibleAnswers as String[], image as String);
+	askOpenTrustedQuestion(to as Contact, questionId as String, title as String, content as String);
+	askOpenTrustedQuestionWithImage(to as Contact, questionId as String, title as String, content as String, image as String);
+}
+
+device CommunicationService extends Service {
+	action SendMessage;
+	action AskQuestion;
+	source questionAnswer as String indexed by questionId as String;
+	source lastMessage as Message;
+
+	action SendTrustedMessage;
+	action AskTrustedQuestion;
+	source trustedQuestionAnswer as String indexed by questionId as String;
+	source lastTrustedMessage as Message;
+
+	source safeContacts as Contact[];
+}
+
+device Mailer extends CommunicationService {
+}
+
+device InstantMessenger extends CommunicationService {
+}
+
+device SMSSender extends CommunicationService {
+}
+
+device ActivityNotifier extends Service {
+	source activity as DailyActivity;
+	action Update;
+}
+
+device AddressBook extends HomeService {
+	attribute owner as String;
+	source contacts as Contact[] indexed by filter as Contact;
+	action AddressBookAction;
+}
+
+device Agenda extends HomeService {
+	attribute owner as String;
+	source currentEvent as AgendaEvent;
+	source nextEvent as AgendaEvent;
+	source nextEvents as AgendaEvent[];
+	source events as AgendaEvent[] indexed by filter as AgendaEvent;
+	action AgendaEventAction;
+}
+
+action AddTask {
+	addTask(task as Task);
+}
+
+action DeleteTask {
+	deleteTask(task as Task);
+}
+
+action UpdateTaskState {
+	update(taskId as String, state as TaskState);
+}
+
+device TaskManager extends HomeService {
+	source tasks as Task[];
+	action AddTask;
+	action DeleteTask;
+	action UpdateTaskState;
+}
+
+structure CriticalNotification {
+	id as String;
+	category as String;
+	text as String;
+	answers as String [];
+}
+
+structure NonCriticalNotification {
+	id as String;
+	category as String;
+	text as String;
+	answers as String [];
+	silent as Boolean;
+}
+
+device Notifier extends Service {
+	action SendCriticalNotification;
+	action SendNonCriticalNotification;
+	source cancelled as Boolean indexed by id as String;
+	source expired as Boolean indexed by id as String;
+	source reply as Integer indexed by id as String;
+}
+
+//-------------------------
+//-- DEVICES
+//-------------------------
+
+device PhysicalDevice extends Device {
+	attribute location as String;
+	attribute user as String;
+}
+
+//------------------
+// Sensors
+//------------------------------------
+
+device Button extends PhysicalDevice {
+	source pushed as Boolean;
+}
+
+device Sensor extends PhysicalDevice {
+}
+
+structure State{
+	state as String;
+	timestamp as String;
+	batteryLevel as String;
+}
+
+device MotionDetector extends Sensor {
+	source motion as State;
+}
+
+device LightSensor extends Sensor {
+	source level as Float;
+}
+
+device TemperatureSensor extends Sensor {
+	source temperature as Float indexed by unit as TemperatureUnit;
+}
+
+device ContactSensor extends Sensor {
+	source state as State;
+}
+
+device SmokeSensor extends Sensor {
+	source smoke as Boolean;
+}
+
+device EnergyMeter extends Sensor {
+}
+
+device ElectricMeter extends EnergyMeter {
+	source currentElectricConsumption as State;
+}
+
+device WaterMeter extends EnergyMeter {
+	source currentWaterConsumption as Float;
+}
+
+device GasMeter extends EnergyMeter {
+	source currentGasConsumption as Float;
+}
+
+
+//------------------
+// Appliances
+//------------------------------------
+structure OnOff{
+	status as String;
+	eventTime as String;
+}
+
+device Appliance extends PhysicalDevice {
+	action On;
+	action Off;
+	//source status as OnOff;
+}
+
+device Light extends Appliance {
+	source status as State;
+}
+
+device DimmableLight extends Light {
+	action VariationControl;
+	source level as Float;
+}
+
+device Heater extends Appliance {
+	source status as OnOff;
+}
+
+device Alarm extends Appliance {
+	//source status as OnOff;
+}
+
+device RepetitiveAlarm extends Alarm {
+
+}
+
+device Fan extends Appliance {
+}
+
+device Cooker extends Appliance {
+	source status as State;
+}
+
+device Thermostat extends Appliance {
+	action SetTemperature;
+	source targetTemperature as Temperature;
+}
+
+
+
+// MISC
+
+device Shutter extends PhysicalDevice {
+	action Open;
+	action Close;
+	action SetShutterPosition;
+	source position as Float;
+}
+
+device DoorLocker extends PhysicalDevice {
+	action Lock;
+	action UnLock;
+	source locked as Boolean;
+}
+
+device PhotoFrame extends PhysicalDevice {
+	source photos as File[];
+	action PhotoFrameManagement;
+}
+
+//------------------
+// MESSENGERS
+//------------------------------------
+
+device Messenger extends PhysicalDevice {
+	action SendMessage;
+}
+
+device Prompter extends PhysicalDevice {
+	action AskQuestion;
+	source answer as String indexed by questionId as String;
+}
+
+device Input extends PhysicalDevice {
+	source message as String;
+}
+
+//------------------
+// Healthcare
+//------------------------------------
+enumeration Relationship {
+	ME, FRIEND, FAMILY, CAREGIVER, MEDICAL
+}
+
+enumeration ServiceTabletMode {
+	SHOPPING, PHONE, ALERT
+}
+
+structure PersonalProfile {
+	info as Contact;
+	picture as File;
+	relationship as Relationship;
+}
+
+action PushContacts {
+	pushContacts(profiles as PersonalProfile[]);
+}
+
+device ServiceTablet extends PhysicalDevice {
+	action PushContacts;
+	source tabletMode as ServiceTabletMode;
+	source tabletAction as ServiceTabletMode indexed by profile as PersonalProfile;
+}
+
+device PersonalAddressBook extends UserService {
+	source profiles as PersonalProfile[] indexed by filter as PersonalProfile;
+}
+
+/*** ACTIONS ***/
+action SendCriticalNotification {
+	sendCriticalNotification(notification as CriticalNotification);
+	registerCriticalNotification(notification as CriticalNotification, displayDate as Date);
+	cancelCriticalNotification(id as String);
+}
+
+action SendNonCriticalNotification {
+	sendNonCriticalNotification(notification as NonCriticalNotification);
+	registerNonCriticalNotification(notification as NonCriticalNotification, displayDate as Date, expirationDate as Date);
+	cancelNonCriticalNotification(id as String);
+}
+
+device LoggerSecondTab extends PhysicalDevice{
+	source logs as String;
+}
+
+device Battery extends PhysicalDevice{
+	source batteryState as Integer;
+}
+
+//------------------
+// Security
+//------------------------------------
+
+device IntrusionDetector extends PhysicalDevice {
+	source intrusionDetected as Boolean;
+}
