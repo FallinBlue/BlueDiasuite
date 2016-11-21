@@ -4,6 +4,7 @@ import fr.inria.diagen.core.ServiceConfiguration;
 import fr.inria.phoenix.diasuite.framework.context.wrongalert.AbstractWrongAlert;
 import fr.inria.phoenix.diasuite.framework.device.button.PushedFromButton;
 import fr.inria.phoenix.diasuite.framework.device.notifier.CancelledFromNotifier;
+import fr.inria.phoenix.diasuite.framework.device.notifier.ReplyFromNotifier;
 
 /* (non-Javadoc)
  * The implementation of the WrongAlert context
@@ -22,11 +23,13 @@ public class WrongAlert extends AbstractWrongAlert {
 		return 3; // to cancel the notification
 	}
 
+
 	@Override
-	protected Integer onCancelledFromNotifier(
-			CancelledFromNotifier cancelledFromNotifier) {
+	protected WrongAlertValuePublishable onReplyFromNotifier(ReplyFromNotifier replyFromNotifier) {
 		// TODO Auto-generated method stub
-		return 2; // cancel the button ?
+		if (replyFromNotifier.value() == 2) // si pb
+			return new WrongAlertValuePublishable(2,true);
+	return new WrongAlertValuePublishable(0,false);
 	}
     
 

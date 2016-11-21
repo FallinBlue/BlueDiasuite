@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <DiaGraph>
-	<controller id="SuspiciousAlertController" x="112.0" y="188.0"/>
-	<context id="AlertSuspectRegulation" x="112.0" y="308.0"/>
-	<source id="MotionDetector/motion" x="112.0" y="428.0"/>
-	<source id="Input/message" x="292.0" y="428.0"/>
-	<controller id="RAZController" x="292.0" y="188.0"/>
-	<context id="WrongAlert" x="292.0" y="308.0"/>
-	<source id="Button/pushed" x="472.0" y="428.0"/>
-	<controller id="CriticalAlertController" x="472.0" y="188.0"/>
-	<context id="CriticalAlert" x="472.0" y="308.0"/>
-	<action id="Timer/ScheduleTimer" x="112.0" y="68.0"/>
-	<source id="Timer/timerTriggered" x="922.0" y="428.0"/>
-	<action id="Notifier/SendNonCriticalNotification" x="292.0" y="68.0"/>
-	<source id="Notifier/cancelled" x="652.0" y="428.0"/>
-	<action id="MyPhone/EmergencyCall" x="472.0" y="68.0"/>
-	<source id="Notifier/reply" x="1102.0" y="428.0"/>
+	<controller id="SuspiciousAlertController" x="122.0" y="193.0"/>
+	<context id="AlertSuspectRegulation" x="122.0" y="313.0"/>
+	<source id="MotionDetector/motion" x="122.0" y="433.0"/>
+	<source id="Input/message" x="302.0" y="433.0"/>
+	<controller id="RAZController" x="302.0" y="193.0"/>
+	<context id="WrongAlert" x="302.0" y="313.0"/>
+	<source id="Button/pushed" x="482.0" y="433.0"/>
+	<controller id="CriticalAlertController" x="482.0" y="193.0"/>
+	<context id="CriticalAlert" x="482.0" y="313.0"/>
+	<action id="Timer/ScheduleTimer" x="122.0" y="73.0"/>
+	<source id="Timer/timerTriggered" x="842.0" y="433.0"/>
+	<action id="Notifier/SendNonCriticalNotification" x="302.0" y="73.0"/>
+	<source id="Notifier/cancelled" x="662.0" y="433.0"/>
+	<action id="MyPhone/EmergencyCall" x="482.0" y="73.0"/>
+	<source id="Notifier/reply" x="1022.0" y="433.0"/>
 </DiaGraph>

@@ -28,9 +28,10 @@ public class CriticalAlert extends AbstractCriticalAlert {
 	}
 
 	@Override
-	protected Integer onReplyFromNotifier(ReplyFromNotifier replyFromNotifier) {
+	protected CriticalAlertValuePublishable onReplyFromNotifier(ReplyFromNotifier replyFromNotifier) {
 		// TODO Auto-generated method stub
-		return 1;
+		if (replyFromNotifier.value() == 1) // si pb
+			return new CriticalAlertValuePublishable(1,true);
+	return new CriticalAlertValuePublishable(13,false);
 	}
-  
 }
