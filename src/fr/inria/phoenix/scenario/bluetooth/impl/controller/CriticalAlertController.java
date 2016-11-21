@@ -19,6 +19,12 @@ public class CriticalAlertController extends AbstractCriticalAlertController {
      */
     @Override
     protected void onCriticalAlert(CriticalAlertValue criticalAlert, DiscoverForCriticalAlert discover) {
-        // TODO Auto-generated method stub
+    	if (criticalAlert.value()== 1) {
+    	// reset notif	
+    	}
+    	
+    	// disable timer
+    	String IdTimer = "AlertTimerFall007";
+    	discover.timers().anyOne().cancel(IdTimer); // particular ID...    	
     }
 }

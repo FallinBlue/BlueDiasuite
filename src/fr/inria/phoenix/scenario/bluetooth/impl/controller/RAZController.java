@@ -19,6 +19,15 @@ public class RAZController extends AbstractRAZController {
      */
     @Override
     protected void onWrongAlert(WrongAlertValue wrongAlert, DiscoverForWrongAlert discover) {
-        // TODO Auto-generated method stub
+    //	if (wrongAlert.value()==3) // cancel notification
+    	
+    	
+    	// cancel timer
+    	String IdTimer = "AlertTimerFall007";
+    	discover.timers().anyOne().cancel(IdTimer); // particular ID...
+    	
+    	// notif
+    	String IdNotification = "AlertNotificationFall007";
+    	discover.notifiers().anyOne().cancelNonCriticalNotification(IdNotification);
     }
 }

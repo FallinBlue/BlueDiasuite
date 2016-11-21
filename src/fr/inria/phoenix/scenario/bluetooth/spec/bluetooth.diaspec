@@ -1,80 +1,72 @@
 include "taxonomy.diaspec";
 
-action Notify {
-    notify();// to change
-}
-action SuppressNotification { 
-	suppressNotification();// to change
-}
-action TriggerTimer {
-    triggerTimer();
-}
-action ResetTimer {
-    resetTimer();
-}
+
 action EmergencyCall {
     emergencyCall();
 }
 
 controller SuspiciousAlertController {
-	 when provided AlertSuspectRegulation do Notify on Notifier, TriggerTimer on Timer;
+	 when provided AlertSuspectRegulation do SendNonCriticalNotification on Notifier, ScheduleTimer on Timer;
 	
 }
 
 controller RAZController {
-	 when provided WrongAlert do SuppressNotification on Notifier, ResetTimer on Timer;
+	 when provided WrongAlert 
+	 do SendNonCriticalNotification on Notifier, ScheduleTimer on Timer;
 }
 
 
 controller CriticalAlertController { 
-	 when provided CriticalAlert do EmergencyCall on Notifier;
+	 when provided CriticalAlert do EmergencyCall on MyPhone, ScheduleTimer on Timer;
 	
 }
 
 
 context AlertSuspectRegulation as String {//to change
-	when provided input from DeviceInput	
-get position from MotionDetector always publish; // get all and status 
+	when provided message from Input	
+		get motion from MotionDetector
+		maybe publish; // get all and status 
 }
 
-context WrongAlert as Boolean{//to change
-	when provided notificationResponse  from Notifier 
-     get notificationResponse from Notifier always publish;
-    when provided pushed from DeviceButton  
-     get pushed from DeviceButton always publish;
+context WrongAlert as Integer {//to change
+	when provided cancelled  from Notifier
+     always publish;
+    when provided pushed from Button  
+     always publish;
 }
 
-context CriticalAlert as Float {//to change
-	when provided timerValue from Timer	
-     get timerValue from Timer always publish;
+context CriticalAlert as Integer {//to change
+     when provided reply from Notifier
+      always publish;
+	when provided timerTriggered from Timer	
+      maybe publish;
+
 }
 
-device MotionDetector {
-	source position as Float ;
-	source status as String ;
-}
+//device MotionDetector {
+//	source position as Float ;
+//	source status as String ;
+//}
 
-device DeviceButton {
-	source pushed as Boolean ;
-}
+//device DeviceButton {
+//	source pushed as Boolean ;
+//}
 
 
-device DeviceInput {
-	source input as Float;
-}
+//device DeviceInput {
+//	source me  as Float;
+//}
 
-device Notifier {
-	source notificationResponse as Boolean;
-	
-	action Notify; 
-	action SuppressNotification;
+
+
+device MyPhone {
+
 	action EmergencyCall;
 }
-
-device Timer {
-	source timerValue as Float;
-	
-	action TriggerTimer;
-		
-	action ResetTimer;
-}
+//device Timer {
+//	source timerValue as Float;
+//	
+//	action TriggerTimer;
+//		
+//	action ResetTimer;
+//}
