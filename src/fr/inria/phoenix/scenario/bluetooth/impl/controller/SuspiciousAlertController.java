@@ -24,18 +24,18 @@ public class SuspiciousAlertController extends AbstractSuspiciousAlertController
     @Override
     protected void onAlertSuspectRegulation(AlertSuspectRegulationValue alertSuspectRegulation, DiscoverForAlertSuspectRegulation discover) {
         // TODO Auto-generated method stub
-    	
+
     	// timer
     	String IdTimer = "AlertTimerFall007";
     	Integer delayMs = 4*60*1000; // 4 min
 		discover.timers().anyOne().schedule(IdTimer, delayMs );// particular ID...
-
 		// notif
     	String IdNotification = "AlertNotificationFall007";
     	List<String> answers = new ArrayList<String>();
-    	answers.add("Oui appeler les secours ");
+    	answers.add("Oui appeler les secours");
     	answers.add("Non tout va bien");
     	NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chuté ?",answers,false);
+
     	discover.notifiers().anyOne().sendNonCriticalNotification(notification);
 
 		

@@ -2,6 +2,7 @@ package fr.inria.phoenix.scenario.bluetooth.impl.context;
 
 import fr.inria.diagen.core.ServiceConfiguration;
 import fr.inria.phoenix.diasuite.framework.context.criticalalert.AbstractCriticalAlert;
+import fr.inria.phoenix.diasuite.framework.device.button.PushedFromButton;
 import fr.inria.phoenix.diasuite.framework.device.notifier.ReplyFromNotifier;
 import fr.inria.phoenix.diasuite.framework.device.timer.TimerTriggeredFromTimer;
 
@@ -33,5 +34,11 @@ public class CriticalAlert extends AbstractCriticalAlert {
 		if (replyFromNotifier.value() == 1) // si pb
 			return new CriticalAlertValuePublishable(1,true);
 	return new CriticalAlertValuePublishable(13,false);
+	}
+
+
+	@Override
+	protected Integer onPushedFromButton(PushedFromButton pushedFromButton) {
+		return 2;
 	}
 }

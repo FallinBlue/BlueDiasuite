@@ -31,8 +31,7 @@ context AlertSuspectRegulation as String {//to change
 context WrongAlert as Integer {//to change
 	when provided reply  from Notifier
      maybe publish;
-    when provided pushed from Button  
-     always publish;
+
 }
 
 context CriticalAlert as Integer {//to change
@@ -40,6 +39,8 @@ context CriticalAlert as Integer {//to change
       maybe publish;
 	when provided timerTriggered from Timer	
       maybe publish;
+     when provided pushed from Button  
+     always publish;
 
 }
 
@@ -59,10 +60,11 @@ context CriticalAlert as Integer {//to change
 
 
 
-device MyPhone {
+device MyPhone extends PhysicalDevice {
 
 	action EmergencyCall;
 }
+
 //device Timer {
 //	source timerValue as Float;
 //	

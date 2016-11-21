@@ -21,13 +21,12 @@ public class RAZController extends AbstractRAZController {
     protected void onWrongAlert(WrongAlertValue wrongAlert, DiscoverForWrongAlert discover) {
     //	if (wrongAlert.value()==3) // cancel notification
     	
-    	
     	// cancel timer
     	String IdTimer = "AlertTimerFall007";
     	discover.timers().anyOne().cancel(IdTimer); // particular ID...
-    	
+    	System.out.println("kk");
     	// notif
     	String IdNotification = "AlertNotificationFall007";
-    	discover.notifiers().anyOne().cancelNonCriticalNotification(IdNotification);
+    	discover.notifiers().anyOne().cancelNonCriticalNotification("AlertNotificationFall007");;
     }
 }

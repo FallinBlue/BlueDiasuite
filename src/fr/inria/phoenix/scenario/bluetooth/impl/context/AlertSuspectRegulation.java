@@ -33,25 +33,28 @@ public class AlertSuspectRegulation extends AbstractAlertSuspectRegulation {
 	    Timestamp newTimestamp ;
 
 		if (messageAboutBodyPosition.equals("lieDown")) {// allongé
+
 			  Iterator<MotionDetectorProxyForMessageFromInput> allMotionDetectorsIterator = discover.motionDetectors().all().iterator();
 		      
 			  while(allMotionDetectorsIterator.hasNext()) {
-		    	
-		    	  
+
+
 		    	  MotionDetectorProxyForMessageFromInput oneMotionDetector = allMotionDetectorsIterator.next();
-		    	  
-		    	  
-		    	  
-		    	  
+		    	 
+
 		    	  // convert timestamp
 		    		    try {
 							parsedDate = dateFormat.parse(oneMotionDetector.getMotion().getTimestamp());
+
 						} catch (InvocationException e) {
+
 							e.printStackTrace();
 						} catch (ParseException e) {
+
 							e.printStackTrace();
 						}
 		    		    newTimestamp = new java.sql.Timestamp(parsedDate.getTime());
+
 		    	  if (newTimestamp.after(timestampMin)) {
 			    	  //String motionDetectorState = oneMotionDetector.getMotion().getState();
 			    	  // see how is managed the state.... see where he is

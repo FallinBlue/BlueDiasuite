@@ -25,6 +25,11 @@ public class CriticalAlertController extends AbstractCriticalAlertController {
     	
     	// disable timer
     	String IdTimer = "AlertTimerFall007";
-    	discover.timers().anyOne().cancel(IdTimer); // particular ID...    	
+    	discover.timers().anyOne().cancel(IdTimer); // particular ID... 
+    	
+    	
+    	// appel urgence
+    	discover.myPhones().anyOne().emergencyCall(); // checker autre classe ????
+    
     }
 }
