@@ -27,6 +27,6 @@ public class RAZController extends AbstractRAZController {
     	System.out.println("kk");
     	// notif
     	String IdNotification = "AlertNotificationFall007";
-    	discover.notifiers().anyOne().cancelNonCriticalNotification("AlertNotificationFall007");;
+    	discover.notifiers().anyOne().cancelNonCriticalNotification(IdNotification);
     }
 }

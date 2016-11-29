@@ -1,9 +1,11 @@
 package fr.inria.phoenix.scenario.bluetooth.impl.context;
 
+import java.util.List;
+
 import fr.inria.diagen.core.ServiceConfiguration;
 import fr.inria.phoenix.diasuite.framework.context.criticalalert.AbstractCriticalAlert;
+import fr.inria.phoenix.diasuite.framework.datatype.contact.Contact;
 import fr.inria.phoenix.diasuite.framework.device.button.PushedFromButton;
-import fr.inria.phoenix.diasuite.framework.device.notifier.ReplyFromNotifier;
 import fr.inria.phoenix.diasuite.framework.device.timer.TimerTriggeredFromTimer;
 
 /* (non-Javadoc)
@@ -15,30 +17,36 @@ public class CriticalAlert extends AbstractCriticalAlert {
     public CriticalAlert(ServiceConfiguration serviceConfiguration) {
         super(serviceConfiguration);
     }
-
-
-	@Override
-	protected CriticalAlertValuePublishable onTimerTriggeredFromTimer(
-			TimerTriggeredFromTimer timerTriggeredFromTimer) {
-		// TODO Auto-generated method stub
-		if (timerTriggeredFromTimer.value().equals("Finished")) // to change with the time !!???
-			// tester l'id du timer
-			return new CriticalAlertValuePublishable(0,true);
-		else 
-			return new CriticalAlertValuePublishable(12,false);	
-	}
-
-	@Override
-	protected CriticalAlertValuePublishable onReplyFromNotifier(ReplyFromNotifier replyFromNotifier) {
-		// TODO Auto-generated method stub
-		if (replyFromNotifier.value() == 1) // si pb
-			return new CriticalAlertValuePublishable(1,true);
-	return new CriticalAlertValuePublishable(13,false);
+    
+    
+	protected List<Contact> getEmergencyContacts(int typeOfDiscover,Object discover) {
+		Contact filter = new Contact();
+		filter.setName("EmergencyCall");
+		List<Contact> emergencyContacts = null;
+		if (typeOfDiscover == 1)
+			emergencyContacts = ((DiscoverForPushedFromButton) discover).addressBooks().anyOne().getContacts(filter);
+		else	
+			emergencyContacts = ( (DiscoverForTimerTriggeredFromTimer) discover).addressBooks().anyOne().getContacts(filter);
+		return emergencyContacts;
 	}
 
 
 	@Override
-	protected Integer onPushedFromButton(PushedFromButton pushedFromButton) {
-		return 2;
+	protected List<Contact> onPushedFromButton(PushedFromButton pushedFromButton,
+			DiscoverForPushedFromButton discover) {
+		List<Contact> emergencyContacts = getEmergencyContacts(1,discover);
+		return emergencyContacts;
+
+	}
+
+
+
+	@Override
+	protected List<Contact> onTimerTriggeredFromTimer(
+			TimerTriggeredFromTimer timerTriggeredFromTimer,
+			DiscoverForTimerTriggeredFromTimer discover) {
+		List<Contact> emergencyContacts = getEmergencyContacts(2,discover);
+
+		return emergencyContacts;//emergencyContacts;;
 	}
 }

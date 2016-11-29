@@ -17,8 +17,7 @@ controller RAZController {
 
 
 controller CriticalAlertController { 
-	 when provided CriticalAlert do EmergencyCall on MyPhone, ScheduleTimer on Timer;
-	
+	 when provided CriticalAlert do SendTrustedMessage on CommunicationService, ScheduleTimer on Timer;
 }
 
 
@@ -34,13 +33,15 @@ context WrongAlert as Integer {//to change
 
 }
 
-context CriticalAlert as Integer {//to change
-     when provided reply from Notifier
-      maybe publish;
+context CriticalAlert as Contact[] {//to change
+//     when provided reply from Notifier
+//      maybe publish;
 	when provided timerTriggered from Timer	
-      maybe publish;
-     when provided pushed from Button  
-     always publish;
+		get contacts from AddressBook
+      	always publish;
+    when provided pushed from Button 
+     	get contacts from AddressBook 
+     	always publish;
 
 }
 
@@ -60,10 +61,10 @@ context CriticalAlert as Integer {//to change
 
 
 
-device MyPhone extends PhysicalDevice {
-
-	action EmergencyCall;
-}
+//device MyPhone extends PhysicalDevice {
+//
+//	action EmergencyCall;
+//}
 
 //device Timer {
 //	source timerValue as Float;
