@@ -1,9 +1,25 @@
 include "taxonomy.diaspec";
 
-
-action EmergencyCall {
-    emergencyCall();
+// new taxonomy presence detector
+enumeration Rooms {
+        BEDROOM, KITCHEN, BATHROOM, LIVING, TOILETS, ENTRANCE
 }
+
+action UpdatePresence {
+        setPresence(presence as Boolean, room as Rooms);
+}
+
+device PresenceDetector extends Service {
+        source inBedroom as Boolean;
+        source inBathroom as Boolean;
+        source inKitchen as Boolean;
+        source inEntrance as Boolean;
+        source inLiving as Boolean;
+        source inToilets as Boolean;
+        action UpdatePresence;
+}
+
+
 
 controller SuspiciousAlertController {
 	 when provided AlertSuspectRegulation do SendNonCriticalNotification on Notifier, ScheduleTimer on Timer;
@@ -23,7 +39,8 @@ controller CriticalAlertController {
 
 context AlertSuspectRegulation as String {//to change
 	when provided message from Input	
-		get motion from MotionDetector
+		//get motion from MotionDetector
+		get inBedroom from PresenceDetector
 		maybe publish; // get all and status 
 }
 
@@ -34,42 +51,12 @@ context WrongAlert as Integer {//to change
 }
 
 context CriticalAlert as Contact[] {//to change
-//     when provided reply from Notifier
-//      maybe publish;
 	when provided timerTriggered from Timer	
 		get contacts from AddressBook
-      	always publish;
+      	maybe publish;
     when provided pushed from Button 
-     	get contacts from AddressBook 
-     	always publish;
+     	get contacts from AddressBook, timerTriggered from Timer
+     	maybe publish;
 
 }
 
-//device MotionDetector {
-//	source position as Float ;
-//	source status as String ;
-//}
-
-//device DeviceButton {
-//	source pushed as Boolean ;
-//}
-
-
-//device DeviceInput {
-//	source me  as Float;
-//}
-
-
-
-//device MyPhone extends PhysicalDevice {
-//
-//	action EmergencyCall;
-//}
-
-//device Timer {
-//	source timerValue as Float;
-//	
-//	action TriggerTimer;
-//		
-//	action ResetTimer;
-//}

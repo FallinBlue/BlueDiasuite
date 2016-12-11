@@ -9,17 +9,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
 import fr.inria.phoenix.diasuite.framework.datatype.contact.Contact;
 import fr.inria.phoenix.diasuite.framework.datatype.noncriticalnotification.NonCriticalNotification;
-import fr.inria.phoenix.diasuite.framework.datatype.state.State;
 import fr.inria.phoenix.diasuite.framework.mocks.AddressBookMock;
 import fr.inria.phoenix.diasuite.framework.mocks.ButtonMock;
 import fr.inria.phoenix.diasuite.framework.mocks.CommunicationServiceMock;
 import fr.inria.phoenix.diasuite.framework.mocks.InputMock;
-import fr.inria.phoenix.diasuite.framework.mocks.MotionDetectorMock;
 import fr.inria.phoenix.diasuite.framework.mocks.NotifierMock;
+import fr.inria.phoenix.diasuite.framework.mocks.PresenceDetectorMock;
 import fr.inria.phoenix.diasuite.framework.mocks.TimerMock;
 import fr.inria.phoenix.scenario.bluetooth.impl.ComponentBinder;
 
@@ -38,72 +35,56 @@ public class CriticalAlertTest {
 	@Test
 	public void test() {
 
-		// initialize mock devices...
-		MotionDetectorMock motionDetector1 = mockMotionDetector("motionDetector1","cuisine","Remi") ;
-		MotionDetectorMock motionDetector2 = mockMotionDetector("motionDetector2","chambre","Remi") ;
-		MotionDetectorMock motionDetector3 = mockMotionDetector("motionDetector3","toilettes","Remi") ;
-		MotionDetectorMock motionDetector4 = mockMotionDetector("motionDetector4","douche","Remi") ;
 
-		InputMock input = mockInput("smartphone13","chez soi","Guillaume") ;
-		ButtonMock button = mockButton("bouton12","chez soi","Clément") ;
-		NotifierMock notifier = mockNotifier("Notif5") ;
+		InputMock input = mockInput("smartphone13","chez soi","Guillaume") ; // mock representation of the input (message transmitted through the websocket and bluetooth emitted by the smartphone)
+		ButtonMock button = mockButton("bouton12","chez soi","ClÃ©ment") ; // button on the smarphone for emitting the call
+		NotifierMock notifier = mockNotifier("Notif5") ; // mock Notifier on the principal tablet
+		TimerMock timer = mockTimer("AlertTimerFall007") ; // mock timer initialization 
+		AddressBookMock addressBook = mockAddressBook("comService1","Me") ; // mock address book initialization 
+		CommunicationServiceMock communicationService = mockCommunicationService("comService1") ; // mock communicationService used for sending SMS initialization
+		PresenceDetectorMock presenceDetector = mockPresenceDetector("presenceDetector"); // initialize presenceDetector mock
 
-		TimerMock timer = mockTimer("Timer11") ;
-		AddressBookMock addressBook = mockAddressBook("comService1","Me") ;
+		List<Contact> newContactsValue = new ArrayList<Contact>(); // initialize the list of contact to add
+        List<String> groups_friend = new ArrayList<String>(); // initialize a list of groups that will contain friends
+        groups_friend.add("friends"); // add friends' group to this list
+        List<String> groups_emergency = new ArrayList<String>(); // initialize a list of groups that will contain emergencyCall
+        groups_emergency.add("emergencyCall"); // add emergencyCall' group to this list
 
-		List<Contact> newContactsValue = new ArrayList<Contact>();
-		Contact aideSoignante = new Contact("aideSoignante","tata@toto","0300000000", "0700000000", null, null);			
-		Contact maSoeur = new Contact("maSoeur","tete@tyty","0300000001", "0700000001", null, null);
-		Contact medecin = new Contact("medecin","titi@tutu","0300000002", "0700000002", null, null);
+        // create contacts (3 in group emergency and one in friends
+		Contact aideSoignante = new Contact("aideSoignante","tata@toto","0300000000", "0700000000", null, groups_emergency);			
+		Contact maSoeur = new Contact("Germaine","tete@tyty","0300000001", "0700000001", null, groups_emergency);
+		Contact medecin = new Contact("medecin","titi@tutu","0300000002", "0700000002", null, groups_emergency);
+		Contact josette = new Contact("Josette","jos@ette","0300000003", "0700000003", null, groups_friend);
+
+		// add the contacts to the list that will be added to the addressBook
 		newContactsValue.add(aideSoignante);
 		newContactsValue.add(maSoeur);
 		newContactsValue.add(medecin);
+		newContactsValue.add(josette);
 
 		Contact filter = new Contact();
-		filter.setName("EmergencyCall");
-
-		addressBook.setContacts(newContactsValue, filter);
-		
-		//add someone else with other filter
-//		Contact bibi = new Contact("bibi","tt@tt","0300000003", "0700000003", null, null);
-//		filter.setName("Friend");
-//		newContactsValue.clear();
-//		newContactsValue.add(bibi);
-//		addressBook.setContacts(newContactsValue, filter);
+		addressBook.setContacts(newContactsValue, filter); // add contacts to the addressBook
 		
 		
-		CommunicationServiceMock communicationService = mockCommunicationService("comService1") ;
+		presenceDetector.setInBedroom(false); // set the inBedroom property to false (not in the room)
 
-		// set attributes...
-		State state1 = new State("active","2016-11-21 15:33:42.555","batteryHigh");
-		State state2 = new State("active","2016-11-21 15:35:43.505","batteryMedium");
-		State state3 = new State("active","2016-11-19 15:35:43.505","batteryMedium");
-		State state4 = new State("active","2016-11-20 15:35:43.505","batteryMedium");
-
-		motionDetector1.setMotion(state1);
-		motionDetector2.setMotion(state2);
-		motionDetector3.setMotion(state3);
-		motionDetector4.setMotion(state4);
-
-		input.message("lieDown");
+		input.message("Une chute a eu lieu"); // send the event to the suspicious context of the fall
 		String IdTimer = "AlertTimerFall007";
 		Integer delayMs = 4*60*1000; // 4 min
-		timer.expectSchedule(IdTimer, delayMs); // voir si le message est bien envoyé par la bonne personne
+		timer.expectSchedule(IdTimer, delayMs); // test if the timer has been schedules
 
-		// notifier
-		String IdNotification = "AlertNotificationFall007";
+		String IdNotification = "AlertNotificationFall007"; 		// notification construction
 		List<String> answers = new ArrayList<String>();
 		answers.add("Oui appeler les secours");
 		answers.add("Non tout va bien");
-		NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chuté ?",answers,false);
+		NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chutï¿½ ?",answers,false);
+		
+		notifier.expectSendNonCriticalNotification(notification); // test if the notification has weel be triggered
 
-		notifier.expectSendNonCriticalNotification(notification);
+		String title = "[EMERGENCY DIASUITE]"; // write the title of the sms
+		String content = "My Name has probably fallen. Please call here or help her."; // write the content of the sms
 
-
-		String title = "[EMERGENCY DIASUITE]";
-		String content = "My Name has probably fallen. Please call here or help her.";
-
-		int test = 1 ;
+		int test = 1 ; // test number
 
 		///  test critical Alert 1
 		if (test == 1) {
@@ -114,6 +95,7 @@ public class CriticalAlertTest {
 
 
 			assertTrue(communicationService.expectSendTrustedMessage(aideSoignante, title, content));
+			//assertFalse(communicationService.expectSendTrustedMessage(josette, title, content));
 
 		}
 

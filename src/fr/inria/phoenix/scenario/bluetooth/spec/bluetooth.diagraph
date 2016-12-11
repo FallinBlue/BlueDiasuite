@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <DiaGraph>
-	<controller id="SuspiciousAlertController" x="115.0" y="188.0"/>
-	<action id="Timer/ScheduleTimer" x="115.0" y="68.0"/>
-	<action id="Notifier/SendNonCriticalNotification" x="295.0" y="68.0"/>
-	<context id="AlertSuspectRegulation" x="115.0" y="308.0"/>
-	<source id="MotionDetector/motion" x="115.0" y="428.0"/>
-	<source id="Input/message" x="295.0" y="428.0"/>
-	<controller id="RAZController" x="295.0" y="188.0"/>
-	<context id="WrongAlert" x="295.0" y="308.0"/>
-	<source id="Notifier/reply" x="475.0" y="428.0"/>
-	<controller id="CriticalAlertController" x="475.0" y="188.0"/>
-	<action id="CommunicationService/SendTrustedMessage" x="475.0" y="68.0"/>
-	<context id="CriticalAlert" x="475.0" y="308.0"/>
-	<source id="AddressBook/contacts" x="835.0" y="428.0"/>
-	<source id="Timer/timerTriggered" x="655.0" y="428.0"/>
-	<source id="Button/pushed" x="1015.0" y="428.0"/>
+	<controller id="SuspiciousAlertController" x="122.0" y="192.0"/>
+	<action id="Notifier/SendNonCriticalNotification" x="122.0" y="72.0"/>
+	<action id="Timer/ScheduleTimer" x="302.0" y="72.0"/>
+	<context id="AlertSuspectRegulation" x="122.0" y="312.0"/>
+	<source id="PresenceDetector/inBedroom" x="0.0" y="0.0"/>
+	<source id="Input/message" x="122.0" y="432.0"/>
+	<controller id="RAZController" x="302.0" y="192.0"/>
+	<context id="WrongAlert" x="302.0" y="312.0"/>
+	<source id="Notifier/reply" x="302.0" y="432.0"/>
+	<controller id="CriticalAlertController" x="482.0" y="192.0"/>
+	<action id="CommunicationService/SendTrustedMessage" x="482.0" y="72.0"/>
+	<context id="CriticalAlert" x="482.0" y="312.0"/>
+	<source id="Button/pushed" x="842.0" y="432.0"/>
+	<source id="AddressBook/contacts" x="482.0" y="432.0"/>
+	<source id="Timer/timerTriggered" x="662.0" y="432.0"/>
 </DiaGraph>

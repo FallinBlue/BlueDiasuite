@@ -6,14 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
-
-
-
-
-
-
 import fr.inria.phoenix.diasuite.framework.datatype.state.State;
 import fr.inria.phoenix.diasuite.framework.mocks.MotionDetectorMock;
 import fr.inria.phoenix.diasuite.framework.mocks.NotifierMock;
@@ -40,9 +32,7 @@ public class WrongAlertTest {
 			 MotionDetectorMock motionDetector2 = mockMotionDetector("motionDetector2","chambre","Remi") ;
 			 MotionDetectorMock motionDetector3 = mockMotionDetector("motionDetector3","toilettes","Remi") ;
 			 MotionDetectorMock motionDetector4 = mockMotionDetector("motionDetector4","douche","Remi") ;
-			 
-			 //InputMock input = mockInput("smartphone13","chez soi","Guillaume") ;
-			 //ButtonMock button = mockButton("bouton12","chez soi","Clément") ;
+
 			 NotifierMock notifier = mockNotifier("Notif5") ;
 
 			 TimerMock timer = mockTimer("Timer11") ;
@@ -58,22 +48,11 @@ public class WrongAlertTest {
 			 motionDetector3.setMotion(state3);
 			 motionDetector4.setMotion(state4);
 		 
-//			 input.message("lieDown");
 			 String IdTimer = "AlertTimerFall007";
-			 //Integer delayMs = 4*60*1000; // 4 min
-//			 timer.expectSchedule(IdTimer, delayMs); // voir si le message est bien envoyé par la bonne personne
-//			 
-//			// notifier
+
+  			 // notifier
 			 String IdNotification = "AlertNotificationFall007";
-//			 List<String> answers = new ArrayList<String>();
-//			 answers.add("Oui appeler les secours");
-//			 answers.add("Non tout va bien");
-//			 NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chuté ?",answers,false);
-//
-//			 notifier.expectSendNonCriticalNotification(notification);
 			 
-			 
-			// notifier.
 			 
 			 int test = 1;
 			 

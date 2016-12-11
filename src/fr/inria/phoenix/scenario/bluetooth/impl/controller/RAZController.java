@@ -9,24 +9,30 @@ import fr.inria.phoenix.diasuite.framework.context.wrongalert.WrongAlertValue;
  * @see fr.inria.phoenix.diasuite.framework.controller.razcontroller.AbstractRAZController
  */
 public class RAZController extends AbstractRAZController {
-    
+	/**
+     * A constructor that instantiate the class RAZController
+     */
     public RAZController(ServiceConfiguration serviceConfiguration) {
         super(serviceConfiguration);
     }
 
-    /* (non-Javadoc)
-     * @see fr.inria.phoenix.diasuite.framework.controller.razcontroller.AbstractRAZController#onWrongAlert(WrongAlertValue, DiscoverForWrongAlert)
+    /**
+     * This method is called when the <code>WrongAlert</code> context publishes a value.
+     * 
+     * <pre>
+     * when provided WrongAlert 
+     * 	 do SendNonCriticalNotification on Notifier, ScheduleTimer on Timer;
+     * </pre>
+     * 
+     * @param wrongAlert the value of the <code>WrongAlert</code> context.
+     * @param discover a discover object to get context values and action methods
      */
     @Override
-    protected void onWrongAlert(WrongAlertValue wrongAlert, DiscoverForWrongAlert discover) {
-    //	if (wrongAlert.value()==3) // cancel notification
-    	
-    	// cancel timer
+    protected void onWrongAlert(WrongAlertValue wrongAlert, DiscoverForWrongAlert discover) {    	
     	String IdTimer = "AlertTimerFall007";
-    	discover.timers().anyOne().cancel(IdTimer); // particular ID...
-    	System.out.println("kk");
-    	// notif
+    	discover.timers().anyOne().cancel(IdTimer);     	// cancel timer with particular ID...
+
     	String IdNotification = "AlertNotificationFall007";
-    	discover.notifiers().anyOne().cancelNonCriticalNotification(IdNotification);
+    	discover.notifiers().anyOne().cancelNonCriticalNotification(IdNotification); // cancel notification with particular ID...
     }
 }

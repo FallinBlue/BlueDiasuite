@@ -14,29 +14,36 @@ import fr.inria.phoenix.diasuite.framework.datatype.noncriticalnotification.NonC
  */
 public class SuspiciousAlertController extends AbstractSuspiciousAlertController {
     
+	/**
+     * A constructor that instantiate the class SuspiciousAlertController
+     */
     public SuspiciousAlertController(ServiceConfiguration serviceConfiguration) {
         super(serviceConfiguration);
     }
 
-    /* (non-Javadoc)
-     * @see fr.inria.phoenix.diasuite.framework.controller.suspiciousalertcontroller.AbstractSuspiciousAlertController#onAlertSuspectRegulation(AlertSuspectRegulationValue, DiscoverForAlertSuspectRegulation)
+    /**
+     * This method is called when the <code>AlertSuspectRegulation</code> context publishes a value.
+     * 
+     * <pre>
+     * when provided AlertSuspectRegulation do SendNonCriticalNotification on Notifier, ScheduleTimer on Timer;
+     * </pre>
+     * 
+     * @param alertSuspectRegulation the value of the <code>AlertSuspectRegulation</code> context.
+     * @param discover a discover object to get context values and action methods
      */
     @Override
     protected void onAlertSuspectRegulation(AlertSuspectRegulationValue alertSuspectRegulation, DiscoverForAlertSuspectRegulation discover) {
-        // TODO Auto-generated method stub
-
-    	// timer
     	String IdTimer = "AlertTimerFall007";
     	Integer delayMs = 4*60*1000; // 4 min
-		discover.timers().anyOne().schedule(IdTimer, delayMs );// particular ID...
-		// notif
-    	String IdNotification = "AlertNotificationFall007";
-    	List<String> answers = new ArrayList<String>();
-    	answers.add("Oui appeler les secours");
-    	answers.add("Non tout va bien");
-    	NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chuté ?",answers,false);
+		discover.timers().anyOne().schedule(IdTimer, delayMs );// schedule timer with particular ID 
 
-    	discover.notifiers().anyOne().sendNonCriticalNotification(notification);
+		String IdNotification = "AlertNotificationFall007";
+    	List<String> answers = new ArrayList<String>(); // Initialize list of answers of notification
+    	answers.add("Oui appeler les secours"); // First choice of the notification
+    	answers.add("Non tout va bien"); // First choice of the notification
+    	NonCriticalNotification notification = new NonCriticalNotification(IdNotification,"Fall Alert","Avez-vous chutÃ© ?",answers,false); // create the notification en mode non silencieuse
+
+    	discover.notifiers().anyOne().sendNonCriticalNotification(notification); // envoi de la notification
 
 		
     }
